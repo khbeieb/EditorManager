@@ -1,5 +1,6 @@
 package org.mobelite.editormanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,5 +17,6 @@ public class Book extends Publication {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
+    @JsonBackReference
     private Author author;
 }
