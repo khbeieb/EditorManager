@@ -18,8 +18,6 @@ public class Magazine extends Publication{
 
     private int issueNumber;
 
-    private String title;
-
     @ManyToMany
     @JoinTable(
             name = "magazine_author",

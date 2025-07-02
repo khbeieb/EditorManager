@@ -33,7 +33,7 @@ public class AuthorController {
         } catch (Exception e) {
             ApiResponse<AuthorDTO> errorResponse = new ApiResponse<>(
                     500,
-                    "Failed to create author",
+                    "Failed to create author " + e.getMessage(),
                     null,
                     LocalDateTime.now()
             );

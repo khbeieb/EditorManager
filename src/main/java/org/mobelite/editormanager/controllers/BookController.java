@@ -39,7 +39,7 @@ public class BookController {
             log.error("Error creating book", e);
             ApiResponse<BookDTO> errorResponse = new ApiResponse<>(
                     500,
-                    "Failed to create book",
+                    "Failed to create book" + e.getMessage(),
                     null,
                     LocalDateTime.now()
             );
@@ -61,7 +61,7 @@ public class BookController {
         } catch (Exception e) {
             ApiResponse<List<BookDTO>> errorResponse = new ApiResponse<>(
                     500,
-                    "Failed to fetch books",
+                    "Failed to fetch books " + e.getMessage(),
                     null,
                     LocalDateTime.now()
             );
@@ -96,7 +96,7 @@ public class BookController {
             log.error("Error fetching book", e);
             ApiResponse<BookDTO> errorResponse = new ApiResponse<>(
                     500,
-                    "Failed to fetch book with ISBN " + isbn,
+                    "Failed to fetch book with ISBN " + isbn + "error: " + e.getMessage(),
                     null,
                     LocalDateTime.now()
             );

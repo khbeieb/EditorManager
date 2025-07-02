@@ -1,21 +1,66 @@
 package org.mobelite.editormanager.services;
 
 import lombok.AllArgsConstructor;
+import org.mobelite.editormanager.dto.AuthorBasicDTO;
+import org.mobelite.editormanager.dto.MagazineDTO;
+import org.mobelite.editormanager.entities.Author;
 import org.mobelite.editormanager.entities.Magazine;
+import org.mobelite.editormanager.repositories.AuthorRepository;
 import org.mobelite.editormanager.repositories.MagazineRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class MagazineService {
     private final MagazineRepository magazineRepository;
+    private final AuthorRepository authorRepository;
 
-    Magazine addMagazine(Magazine magazine) {
-        return magazineRepository.save(magazine);
+    public MagazineDTO addMagazine(Magazine request) {
+        if (magazineRepository.existsMagazineByIssueNumber(request.getIssueNumber())) {
+            throw new RuntimeException("Magazine with issue number " + request.getIssueNumber() + " already exists");
+        }
+
+        // Validate and fetch complete Author entities from DB
+        List<Author> realAuthors = request.getAuthors().stream()
+                .map(author -> authorRepository.findById(author.getId())
+                        .orElseThrow(() -> new RuntimeException("Author not found with ID: " + author.getId())))
+                .toList();
+
+        Magazine magazine = new Magazine();
+        magazine.setIssueNumber(request.getIssueNumber());
+        magazine.setTitle(request.getTitle());
+        magazine.setAuthors(realAuthors);
+
+        Magazine savedMagazine = magazineRepository.save(magazine);
+
+        return new MagazineDTO(
+                savedMagazine.getIssueNumber(),
+                savedMagazine.getTitle(),
+                realAuthors.stream()
+                        .map(author -> new AuthorBasicDTO(
+                                author.getId(),
+                                author.getName(),
+                                author.getNationality()
+                        )).toList()
+        );
     }
 
-//    Optional<Magazine> getMagazineByTitle(String title) {
-//    }
+    public List<MagazineDTO> getAllMagazines() {
+        return magazineRepository.findAll().stream().map(magazine ->
+                new MagazineDTO(
+                        magazine.getIssueNumber(),
+                        magazine.getTitle(),
+                        magazine.getAuthors().stream().map(author ->
+                                new AuthorBasicDTO(
+                                        author.getId(),
+                                        author.getName(),
+                                        author.getNationality()
+                                )
+                        ).toList()
+                )
+        ).toList();
+    }
 }
