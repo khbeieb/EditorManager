@@ -1,5 +1,6 @@
 package org.mobelite.editormanager.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.mobelite.editormanager.dto.ApiResponse;
 import org.mobelite.editormanager.dto.MagazineDTO;
@@ -20,7 +21,7 @@ public class MagazineController {
     private final MagazineService magazineService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<MagazineDTO>> addMagazine(@RequestBody Magazine request) {
+    public ResponseEntity<ApiResponse<MagazineDTO>> addMagazine(@Valid @RequestBody MagazineDTO request) {
         try {
             MagazineDTO savedMagazine = magazineService.addMagazine(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(

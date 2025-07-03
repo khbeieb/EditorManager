@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +18,11 @@ import java.util.List;
 @NoArgsConstructor
 public class Magazine extends Publication{
 
+    @Min(value = 1, message = "Issue number must be at least 1")
     private int issueNumber;
 
+    @NotEmpty(message = "At least one author is required")
+    @Valid
     @ManyToMany
     @JoinTable(
             name = "magazine_author",

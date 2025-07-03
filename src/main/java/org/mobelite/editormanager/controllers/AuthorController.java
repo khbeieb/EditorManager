@@ -1,5 +1,6 @@
 package org.mobelite.editormanager.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.mobelite.editormanager.dto.ApiResponse;
 import org.mobelite.editormanager.dto.AuthorDTO;
@@ -20,7 +21,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<AuthorDTO>> addAuthor(@RequestBody AuthorDTO author) {
+    public ResponseEntity<ApiResponse<AuthorDTO>> addAuthor(@Valid @RequestBody AuthorDTO author) {
         try {
             AuthorDTO savedAuthor = authorService.addAuthor(author);
             ApiResponse<AuthorDTO> response = new ApiResponse<>(

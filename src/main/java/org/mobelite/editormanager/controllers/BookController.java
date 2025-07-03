@@ -1,5 +1,6 @@
 package org.mobelite.editormanager.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mobelite.editormanager.dto.ApiResponse;
@@ -24,9 +25,11 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<BookDTO>> createBook(@RequestBody Book book) {
+    public ResponseEntity<ApiResponse<BookDTO>> createBook(@Valid @RequestBody BookDTO bookDTO) {
+        log.info("Received BookDTO: {}", bookDTO);
+
         try {
-            BookDTO savedBook = bookService.addBook(book);
+            BookDTO savedBook = bookService.addBook(bookDTO);
             ApiResponse<BookDTO> response = new ApiResponse<>(
                     201,
                     "Book created successfully",
@@ -34,18 +37,17 @@ public class BookController {
                     LocalDateTime.now()
             );
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
         } catch (Exception e) {
             log.error("Error creating book", e);
             ApiResponse<BookDTO> errorResponse = new ApiResponse<>(
                     500,
-                    "Failed to create book" + e.getMessage(),
+                    "Failed to create book: " + e.getMessage(),
                     null,
                     LocalDateTime.now()
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
-    };
+    }
 
     @GetMapping()
     public ResponseEntity<ApiResponse<List<BookDTO>>> getBooks() {

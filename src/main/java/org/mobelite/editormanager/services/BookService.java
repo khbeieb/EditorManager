@@ -19,23 +19,19 @@ public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
 
-    public BookDTO addBook(Book request) {
-        if (bookRepository.existsByIsbn(request.getIsbn())) {
-            throw new RuntimeException("Book with isbn " + request.getIsbn() + " already exists");
+    public BookDTO addBook(BookDTO bookDTO) {
+        if (bookRepository.existsByIsbn(bookDTO.getIsbn())) {
+            throw new RuntimeException("Book with isbn " + bookDTO.getIsbn() + " already exists");
         }
 
-        if (request.getAuthor() == null || request.getAuthor().getId() == null) {
-            throw new RuntimeException("Author ID is required");
-        }
-
-        Author author = authorRepository.findById(request.getAuthor().getId())
-                .orElseThrow(() -> new RuntimeException("Author not found with id: " + request.getAuthor().getId()));
+        Author author = authorRepository.findById(bookDTO.getAuthor().getId())
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + bookDTO.getAuthor().getId()));
 
         Book book = new Book();
-        book.setIsbn(request.getIsbn());
-        book.setTitle(request.getTitle());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setTitle(bookDTO.getTitle());
         book.setAuthor(author);
-        book.setPublicationDate(request.getPublicationDate());
+        book.setPublicationDate(bookDTO.getPublicationDate());
 
         Book savedBook = bookRepository.save(book);
 
@@ -43,9 +39,9 @@ public class BookService {
                 savedBook.getTitle(),
                 savedBook.getIsbn(),
                 new AuthorBasicDTO(
-                        book.getAuthor().getId(),
-                        book.getAuthor().getName(),
-                        book.getAuthor().getNationality()
+                        author.getId(),
+                        author.getName(),
+                        author.getNationality()
                 ),
                 savedBook.getPublicationDate()
         );

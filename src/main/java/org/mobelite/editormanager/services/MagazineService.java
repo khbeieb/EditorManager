@@ -19,7 +19,7 @@ public class MagazineService {
     private final MagazineRepository magazineRepository;
     private final AuthorRepository authorRepository;
 
-    public MagazineDTO addMagazine(Magazine request) {
+    public MagazineDTO addMagazine(MagazineDTO request) {
         if (magazineRepository.existsMagazineByIssueNumber(request.getIssueNumber())) {
             throw new RuntimeException("Magazine with issue number " + request.getIssueNumber() + " already exists");
         }
