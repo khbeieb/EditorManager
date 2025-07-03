@@ -6,13 +6,16 @@ import lombok.RequiredArgsConstructor;
 import org.mobelite.editormanager.dto.ApiResponse;
 import org.mobelite.editormanager.dto.BookDTO;
 import org.mobelite.editormanager.dto.MagazineDTO;
+import org.mobelite.editormanager.dto.PublicationDTO;
 import org.mobelite.editormanager.entities.Publication;
 import org.mobelite.editormanager.services.BookService;
 import org.mobelite.editormanager.services.MagazineService;
+import org.mobelite.editormanager.services.PublicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,7 @@ import java.util.*;
 public class PublicationController {
     private final MagazineService magazineService;
     private final BookService bookService;
+    private final PublicationService publicationService;
 
     @Operation(summary = "Get all Publications (Books + Magazines)")
     @GetMapping
@@ -54,5 +58,31 @@ public class PublicationController {
                             LocalDateTime.now()
                     )
             );        }
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "Search publications by title")
+    public ResponseEntity<ApiResponse<List<PublicationDTO>>> searchPublications(@RequestParam String title) {
+        try {
+            List<PublicationDTO> results = publicationService.searchByTitle(title);
+
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            200,
+                            "Found " + results.size() + " publications matching title: " + title,
+                            results,
+                            LocalDateTime.now()
+                    )
+            );
+        } catch (Exception e) {
+            ApiResponse<List<PublicationDTO>> errorResponse = new ApiResponse<>(
+                    500,
+                    "Failed to fetch Publications" + e.getMessage(),
+                    null,
+                    LocalDateTime.now()
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+
+        }
     }
 }
