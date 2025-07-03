@@ -1,5 +1,7 @@
 package org.mobelite.editormanager.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.mobelite.editormanager.dto.ApiResponse;
@@ -16,10 +18,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/authors")
 @RequiredArgsConstructor
+@Tag(name = "Authors", description = "Manage Authors")
 public class AuthorController {
 
     private final AuthorService authorService;
 
+    @Operation(summary = "Add a new Author")
     @PostMapping
     public ResponseEntity<ApiResponse<AuthorDTO>> addAuthor(@Valid @RequestBody AuthorDTO author) {
         try {
@@ -42,6 +46,7 @@ public class AuthorController {
         }
     }
 
+    @Operation(summary = "Get all Authors")
     @GetMapping
     public List<Author> getAuthors() {
         try {

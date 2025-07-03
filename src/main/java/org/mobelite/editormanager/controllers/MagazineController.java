@@ -1,5 +1,7 @@
 package org.mobelite.editormanager.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.mobelite.editormanager.dto.ApiResponse;
@@ -16,10 +18,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/magazines")
 @RequiredArgsConstructor
+@Tag(name = "Magazines", description = "Manage Magazines")
 public class MagazineController {
 
     private final MagazineService magazineService;
 
+    @Operation(summary = "Add a new Magazine")
     @PostMapping
     public ResponseEntity<ApiResponse<MagazineDTO>> addMagazine(@Valid @RequestBody MagazineDTO request) {
         try {
@@ -44,6 +48,7 @@ public class MagazineController {
         }
     }
 
+    @Operation(summary = "Get all Magazines")
     @GetMapping
     public ResponseEntity<ApiResponse<List<MagazineDTO>>> getAllMagazines() {
         List<MagazineDTO> magazines = magazineService.getAllMagazines();

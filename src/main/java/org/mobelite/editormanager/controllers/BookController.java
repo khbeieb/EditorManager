@@ -1,5 +1,7 @@
 package org.mobelite.editormanager.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +22,12 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/books")
+@Tag(name = "Books", description = "Manage Books")
 public class BookController {
 
     private final BookService bookService;
 
+    @Operation(summary = "Add a new Book")
     @PostMapping
     public ResponseEntity<ApiResponse<BookDTO>> createBook(@Valid @RequestBody BookDTO bookDTO) {
         log.info("Received BookDTO: {}", bookDTO);
@@ -49,6 +53,7 @@ public class BookController {
         }
     }
 
+    @Operation(summary = "Get all Books")
     @GetMapping()
     public ResponseEntity<ApiResponse<List<BookDTO>>> getBooks() {
         try {
@@ -71,6 +76,7 @@ public class BookController {
         }
     }
 
+    @Operation(summary = "Get book by isbn")
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<ApiResponse<BookDTO>> getByIsbn(@PathVariable String isbn) {
         try {

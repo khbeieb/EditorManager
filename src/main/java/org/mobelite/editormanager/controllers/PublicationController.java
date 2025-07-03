@@ -1,5 +1,7 @@
 package org.mobelite.editormanager.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.mobelite.editormanager.dto.ApiResponse;
 import org.mobelite.editormanager.dto.BookDTO;
@@ -19,10 +21,12 @@ import java.util.*;
 @RestController
 @RequestMapping("/publications")
 @RequiredArgsConstructor
+@Tag(name = "Publications", description = "Manage Publications")
 public class PublicationController {
     private final MagazineService magazineService;
     private final BookService bookService;
 
+    @Operation(summary = "Get all Publications (Books + Magazines)")
     @GetMapping
     public  ResponseEntity<ApiResponse<Map<String, Object>>> getAllPublications() {
         try {
