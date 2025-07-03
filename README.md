@@ -38,6 +38,17 @@ EditorManager is a Spring Boot application designed to manage Authors, Books, Ma
     MYSQL_PASSWORD=secret
     # other env variables your app needs
     ```
+## API Documentation (Swagger UI)
+
+Once the application is running, access the Swagger UI here:
+
+🔗 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+Use this interface to:
+
+- Browse all REST endpoints
+- View and validate request/response structures
+- Execute test requests interactively
 
 ---
 
