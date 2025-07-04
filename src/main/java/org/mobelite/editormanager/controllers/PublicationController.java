@@ -8,9 +8,13 @@ import org.mobelite.editormanager.dto.BookDTO;
 import org.mobelite.editormanager.dto.MagazineDTO;
 import org.mobelite.editormanager.dto.PublicationDTO;
 import org.mobelite.editormanager.entities.Publication;
+import org.mobelite.editormanager.mappers.PublicationMapper;
 import org.mobelite.editormanager.services.BookService;
 import org.mobelite.editormanager.services.MagazineService;
 import org.mobelite.editormanager.services.PublicationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +34,39 @@ public class PublicationController {
     private final BookService bookService;
     private final PublicationService publicationService;
 
-    @Operation(summary = "Get all Publications (Books + Magazines)")
+    @Operation(summary = "Get paginated Publications (Books + Magazines)")
     @GetMapping
+    public ResponseEntity<ApiResponse<Page<PublicationDTO>>> getPublications(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Publication> publications = publicationService.getPublications(pageable);
+            Page<PublicationDTO> publicationDTOs = publications.map(PublicationMapper::toDTO);
+
+            ApiResponse<Page<PublicationDTO>> response = new ApiResponse<>(
+                    200,
+                    "Publications fetched successfully",
+                    publicationDTOs,
+                    LocalDateTime.now()
+            );
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<Page<PublicationDTO>> errorResponse = new ApiResponse<>(
+                    500,
+                    "Failed to fetch publications: " + e.getMessage(),
+                    null,
+                    LocalDateTime.now()
+            );
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @Operation(summary = "Get all Publications (Groued by Books && Magazines)")
+    @GetMapping("/grouped")
     public  ResponseEntity<ApiResponse<Map<String, Object>>> getAllPublications() {
         try {
             List<BookDTO> books = bookService.getBooks();

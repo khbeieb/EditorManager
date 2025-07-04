@@ -14,11 +14,12 @@ import java.time.LocalDate;
 @Data
 @Table(name = "publication")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "type")
 public abstract class Publication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank(message = "Title is required")
     private String title;

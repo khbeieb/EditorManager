@@ -1,6 +1,7 @@
 package org.mobelite.editormanager.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@DiscriminatorValue("BOOK")
 public class Book extends Publication {
     @NotBlank(message = "ISBN is required")
     private String isbn;

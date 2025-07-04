@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.mobelite.editormanager.dto.AuthorDTO;
 import org.mobelite.editormanager.entities.Author;
-import org.mobelite.editormanager.entities.Book;
 import org.mobelite.editormanager.repositories.AuthorRepository;
 
 import java.time.LocalDate;

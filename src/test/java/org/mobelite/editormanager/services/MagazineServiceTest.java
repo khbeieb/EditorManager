@@ -13,6 +13,7 @@ import org.mobelite.editormanager.entities.Magazine;
 import org.mobelite.editormanager.repositories.AuthorRepository;
 import org.mobelite.editormanager.repositories.MagazineRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class MagazineServiceTest {
     void addMagazine_shouldSaveAndReturnMagazineDTO_whenIssueNumberNotExists() {
         // Arrange
         AuthorBasicDTO authorDto = new AuthorBasicDTO(1L, "Author One", "CountryA");
-        MagazineDTO request = new MagazineDTO(101, "Monthly Tech", List.of(authorDto));
+        MagazineDTO request = new MagazineDTO(101, "Monthly Tech", LocalDate.of(2025, 7, 1), List.of(authorDto));
 
         Author author = new Author();
         author.setId(1L);
@@ -71,7 +72,7 @@ public class MagazineServiceTest {
     @Test
     void addMagazine_shouldThrow_whenIssueNumberExists() {
         // Arrange
-        MagazineDTO request = new MagazineDTO(101, "Monthly Tech", List.of());
+        MagazineDTO request = new MagazineDTO(101, "Monthly Tech",LocalDate.of(2025, 7, 1), List.of());
 
         when(magazineRepository.existsMagazineByIssueNumber(101)).thenReturn(true);
 
@@ -87,7 +88,7 @@ public class MagazineServiceTest {
     void addMagazine_shouldThrow_whenAuthorNotFound() {
         // Arrange
         AuthorBasicDTO authorDto = new AuthorBasicDTO(1L, null, null);
-        MagazineDTO request = new MagazineDTO(101, "Monthly Tech", List.of(authorDto));
+        MagazineDTO request = new MagazineDTO(101, "Monthly Tech",LocalDate.of(2025, 7, 1), List.of(authorDto));
 
         when(magazineRepository.existsMagazineByIssueNumber(101)).thenReturn(false);
         when(authorRepository.findById(1L)).thenReturn(Optional.empty());

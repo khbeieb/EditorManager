@@ -1,9 +1,6 @@
 package org.mobelite.editormanager.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,6 +13,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@DiscriminatorValue("MAGAZINE")
 public class Magazine extends Publication{
 
     @Min(value = 1, message = "Issue number must be at least 1")

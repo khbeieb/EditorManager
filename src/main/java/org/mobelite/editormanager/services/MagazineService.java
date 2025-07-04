@@ -33,6 +33,7 @@ public class MagazineService {
         Magazine magazine = new Magazine();
         magazine.setIssueNumber(request.getIssueNumber());
         magazine.setTitle(request.getTitle());
+        magazine.setPublicationDate(request.getPublishedDate());
         magazine.setAuthors(realAuthors);
 
         Magazine savedMagazine = magazineRepository.save(magazine);
@@ -40,6 +41,7 @@ public class MagazineService {
         return new MagazineDTO(
                 savedMagazine.getIssueNumber(),
                 savedMagazine.getTitle(),
+                savedMagazine.getPublicationDate(),
                 realAuthors.stream()
                         .map(author -> new AuthorBasicDTO(
                                 author.getId(),
@@ -54,6 +56,7 @@ public class MagazineService {
                 new MagazineDTO(
                         magazine.getIssueNumber(),
                         magazine.getTitle(),
+                        magazine.getPublicationDate(),
                         magazine.getAuthors().stream().map(author ->
                                 new AuthorBasicDTO(
                                         author.getId(),
