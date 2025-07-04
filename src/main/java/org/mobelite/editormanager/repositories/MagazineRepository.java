@@ -10,5 +10,7 @@ public interface MagazineRepository extends JpaRepository<Magazine, Integer> {
     boolean existsMagazineByIssueNumber(int issueNumber);
     
     List<Magazine> findMagazineByIssueNumber(int issueNumber);
+
+    List<Magazine> findByTitleContainingIgnoreCase(String title);
     
 }

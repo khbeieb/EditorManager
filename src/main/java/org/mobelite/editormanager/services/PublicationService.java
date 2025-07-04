@@ -2,32 +2,34 @@ package org.mobelite.editormanager.services;
 
 import lombok.AllArgsConstructor;
 import org.mobelite.editormanager.dto.PublicationDTO;
-import org.mobelite.editormanager.entities.Book;
-import org.mobelite.editormanager.entities.Magazine;
-import org.mobelite.editormanager.entities.Publication;
-import org.mobelite.editormanager.repositories.PublicationRepository;
+import org.mobelite.editormanager.repositories.BookRepository;
+import org.mobelite.editormanager.repositories.MagazineRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class PublicationService {
-    private final PublicationRepository publicationRepository;
+    private final MagazineRepository magazineRepository;
+    private final BookRepository bookRepository;
+
 
     public List<PublicationDTO> searchByTitle(String title) {
-        List<Publication> publications = publicationRepository.findByTitleContainingIgnoreCase(title);
+        List<PublicationDTO> books = bookRepository.findByTitleContainingIgnoreCase(title)
+                .stream()
+                .map(book -> new PublicationDTO("Book", book.getTitle(), book.getPublicationDate()))
+                .toList();
 
-        return publications.stream().map(pub -> {
-            String type = pub instanceof Book ? "Book" :
-                    pub instanceof Magazine ? "Magazine" : "Unknown";
+        List<PublicationDTO> magazines = magazineRepository.findByTitleContainingIgnoreCase(title)
+                .stream()
+                .map(mag -> new PublicationDTO("Magazine", mag.getTitle(), mag.getPublicationDate()))
+                .toList();
 
-            return new PublicationDTO(
-                    type,
-                    pub.getTitle(),
-                    pub.getPublicationDate()
-            );
-        }).collect(Collectors.toList());
+        List<PublicationDTO> results = new ArrayList<>();
+        results.addAll(books);
+        results.addAll(magazines);
+        return results;
     }
 }
