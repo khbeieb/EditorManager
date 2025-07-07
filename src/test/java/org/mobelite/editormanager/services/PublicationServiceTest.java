@@ -43,7 +43,7 @@ class PublicationServiceTest {
 
         when(publicationRepository.findAll(pageable)).thenReturn(page);
 
-        Page<Publication> result = publicationService.getPublications(pageable);
+        Page<PublicationDTO> result = publicationService.getPublications(pageable);
 
         assertEquals(1, result.getTotalElements());
         verify(publicationRepository, times(1)).findAll(pageable);

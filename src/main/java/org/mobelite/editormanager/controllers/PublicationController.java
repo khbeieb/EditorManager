@@ -42,8 +42,8 @@ public class PublicationController {
     ) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Publication> publications = publicationService.getPublications(pageable);
-            Page<PublicationDTO> publicationDTOs = publications.map(PublicationMapper::toDTO);
+            Page<PublicationDTO> publicationDTOs = publicationService.getPublications(pageable);
+
 
             ApiResponse<Page<PublicationDTO>> response = new ApiResponse<>(
                     200,

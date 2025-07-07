@@ -18,4 +18,4 @@ set +o allexport
 export SPRING_PROFILES_ACTIVE=$ENV
 
 # Run Maven tests with profile
-mvn test -Dspring.profiles.active=$ENV
+mvn clean verify -Dspring.profiles.active=$ENV

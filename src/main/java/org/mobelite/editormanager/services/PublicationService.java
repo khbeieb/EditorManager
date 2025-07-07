@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.mobelite.editormanager.dto.PublicationDTO;
 import org.mobelite.editormanager.entities.Publication;
 import org.mobelite.editormanager.enums.PublicationType;
+import org.mobelite.editormanager.mappers.PublicationMapper;
 import org.mobelite.editormanager.repositories.BookRepository;
 import org.mobelite.editormanager.repositories.MagazineRepository;
 import org.mobelite.editormanager.repositories.PublicationRepository;
@@ -21,8 +22,9 @@ public class PublicationService {
     private final MagazineRepository magazineRepository;
     private final BookRepository bookRepository;
 
-    public Page<Publication> getPublications(Pageable pageable) {
-        return publicationRepository.findAll(pageable);
+    public Page<PublicationDTO> getPublications(Pageable pageable) {
+        Page<Publication> publications = publicationRepository.findAll(pageable);
+        return publications.map(PublicationMapper::toDTO);
     }
 
     public List<PublicationDTO> searchByTitle(String title) {
