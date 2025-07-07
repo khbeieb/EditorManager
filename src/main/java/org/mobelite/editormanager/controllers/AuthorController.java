@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.mobelite.editormanager.dto.ApiResponse;
 import org.mobelite.editormanager.dto.AuthorDTO;
-import org.mobelite.editormanager.entities.Author;
+import org.mobelite.editormanager.mappers.AuthorMapper;
 import org.mobelite.editormanager.services.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,33 +26,32 @@ public class AuthorController {
     @Operation(summary = "Add a new Author")
     @PostMapping
     public ResponseEntity<ApiResponse<AuthorDTO>> addAuthor(@Valid @RequestBody AuthorDTO author) {
-        try {
-            AuthorDTO savedAuthor = authorService.addAuthor(author);
-            ApiResponse<AuthorDTO> response = new ApiResponse<>(
-                    201,
-                    "Author created successfully",
-                    savedAuthor,
-                    LocalDateTime.now()
-            );
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            ApiResponse<AuthorDTO> errorResponse = new ApiResponse<>(
-                    500,
-                    "Failed to create author " + e.getMessage(),
-                    null,
-                    LocalDateTime.now()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
+        AuthorDTO savedAuthor = authorService.addAuthor(author);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new ApiResponse<>(
+                        HttpStatus.CREATED.value(),
+                        "Author created successfully",
+                        savedAuthor,
+                        LocalDateTime.now()
+                )
+        );
     }
 
     @Operation(summary = "Get all Authors")
     @GetMapping
-    public List<Author> getAuthors() {
-        try {
-            return authorService.getAllAuthors();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<ApiResponse<List<AuthorDTO>>> getAuthors() {
+        List<AuthorDTO> authors = authorService.getAllAuthors()
+                .stream()
+                .map(AuthorMapper::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        HttpStatus.OK.value(),
+                        "Authors fetched successfully",
+                        authors,
+                        LocalDateTime.now()
+                )
+        );
     }
 }

@@ -18,6 +18,7 @@ public class PublicationMapper {
         }
 
         return new PublicationDTO(
+                publication.getId(),
                 type,
                 publication.getTitle(),
                 publication.getPublicationDate()

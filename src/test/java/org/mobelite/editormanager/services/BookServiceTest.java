@@ -40,7 +40,7 @@ public class BookServiceTest {
         author.setName("Author Name");
         author.setNationality("Country");
 
-        BookDTO inputDto = new BookDTO("Title", "ISBN12345", new AuthorBasicDTO(1L, null, null), LocalDate.of(2020,1,1));
+        BookDTO inputDto = new BookDTO(null, "Title", "ISBN12345", new AuthorBasicDTO(1L, null, null), LocalDate.of(2020,1,1));
 
         when(bookRepository.existsByIsbn("ISBN12345")).thenReturn(false);
         when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
@@ -73,7 +73,7 @@ public class BookServiceTest {
     @Test
     void addBook_shouldThrow_whenIsbnExists() {
         // Arrange
-        BookDTO inputDto = new BookDTO("Title", "ISBN12345", new AuthorBasicDTO(1L, null, null), LocalDate.of(2020,1,1));
+        BookDTO inputDto = new BookDTO(null, "Title", "ISBN12345", new AuthorBasicDTO(1L, null, null), LocalDate.of(2020,1,1));
         when(bookRepository.existsByIsbn("ISBN12345")).thenReturn(true);
 
         // Act & Assert
@@ -87,7 +87,7 @@ public class BookServiceTest {
     @Test
     void addBook_shouldThrow_whenAuthorNotFound() {
         // Arrange
-        BookDTO inputDto = new BookDTO("Title", "ISBN12345", new AuthorBasicDTO(1L, null, null), LocalDate.of(2020,1,1));
+        BookDTO inputDto = new BookDTO(null, "Title", "ISBN12345", new AuthorBasicDTO(1L, null, null), LocalDate.of(2020,1,1));
         when(bookRepository.existsByIsbn("ISBN12345")).thenReturn(false);
         when(authorRepository.findById(1L)).thenReturn(Optional.empty());
 

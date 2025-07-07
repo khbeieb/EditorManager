@@ -23,6 +23,7 @@ public class MagazineMapper {
                 .toList();
 
         return new MagazineDTO(
+                magazine.getId(),
                 magazine.getIssueNumber(),
                 magazine.getTitle(),
                 magazine.getPublicationDate(),

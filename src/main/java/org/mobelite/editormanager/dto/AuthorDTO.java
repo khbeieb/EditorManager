@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class AuthorDTO {
+    private Long id;
 
     @NotBlank(message = "Name is required")
     private String name;

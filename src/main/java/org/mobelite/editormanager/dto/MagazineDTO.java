@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class MagazineDTO {
+    private Long id;
     private int issueNumber;
     private String title;
     private LocalDate publishedDate;

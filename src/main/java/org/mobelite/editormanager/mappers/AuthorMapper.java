@@ -6,6 +6,7 @@ import org.mobelite.editormanager.entities.Author;
 public class AuthorMapper {
     public static AuthorDTO toDTO(Author entity) {
         return new AuthorDTO(
+                entity.getId(),
                 entity.getName(),
                 entity.getBirthDate(),
                 entity.getNationality(),

@@ -30,12 +30,12 @@ public class PublicationService {
     public List<PublicationDTO> searchByTitle(String title) {
         List<PublicationDTO> books = bookRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
-                .map(book -> new PublicationDTO(PublicationType.BOOK, book.getTitle(), book.getPublicationDate()))
+                .map(PublicationMapper::toDTO)
                 .toList();
 
         List<PublicationDTO> magazines = magazineRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
-                .map(mag -> new PublicationDTO(PublicationType.MAGAZINE, mag.getTitle(), mag.getPublicationDate()))
+                .map(PublicationMapper::toDTO)
                 .toList();
 
         List<PublicationDTO> results = new ArrayList<>();

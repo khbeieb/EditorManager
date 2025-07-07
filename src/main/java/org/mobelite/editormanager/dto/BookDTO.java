@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDTO {
+    private Long id;
 
     @NotBlank(message = "Title is required")
     @Size(max = 255, message = "Title must not exceed 255 characters")

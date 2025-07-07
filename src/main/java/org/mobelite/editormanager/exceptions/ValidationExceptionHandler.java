@@ -1,4 +1,4 @@
-package org.mobelite.editormanager.exception;
+package org.mobelite.editormanager.exceptions;
 
 import org.mobelite.editormanager.dto.ApiResponse;
 import org.springframework.http.ResponseEntity;

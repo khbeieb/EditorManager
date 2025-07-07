@@ -17,6 +17,7 @@ public class BookMapper {
         Author author = book.getAuthor();
 
         return new BookDTO(
+                book.getId(),
                 book.getTitle(),
                 book.getIsbn(),
                 new AuthorBasicDTO(

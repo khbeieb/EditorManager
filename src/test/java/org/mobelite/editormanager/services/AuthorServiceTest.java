@@ -35,6 +35,7 @@ public class AuthorServiceTest {
     void addAuthor_shouldSaveAndReturnAuthorDTO_whenAuthorDoesNotExistAndBooksAreNull() {
         // Arrange
         AuthorDTO request = new AuthorDTO(
+            null,
                 "Jane Austen",
                 LocalDate.of(1775, 12, 16),
                 "British",
@@ -68,7 +69,7 @@ public class AuthorServiceTest {
     @Test
     void addAuthor_shouldThrowException_whenAuthorAlreadyExists() {
         // Arrange
-        AuthorDTO request = new AuthorDTO("Jane Austen", LocalDate.of(1775, 12, 16), "British", null);
+        AuthorDTO request = new AuthorDTO(null,"Jane Austen", LocalDate.of(1775, 12, 16), "British", null);
         when(authorRepository.findAuthorByName("Jane Austen")).thenReturn(Optional.of(new Author()));
 
         // Act & Assert
@@ -87,6 +88,7 @@ public class AuthorServiceTest {
         book.setIsbn("1234567890");
 
         AuthorDTO request = new AuthorDTO(
+                null,
                 "New Author",
                 LocalDate.of(2000, 1, 1),
                 "Nowhere",
@@ -117,6 +119,7 @@ public class AuthorServiceTest {
         List<Book> books = List.of(book1, book2);
 
         AuthorDTO request = new AuthorDTO(
+                null,
                 "Author With Books",
                 LocalDate.of(1990, 1, 1),
                 "Exampleland",

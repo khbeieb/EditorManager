@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class PublicationDTO {
+    private Long id;
+
     private PublicationType type;
 
     private String title;
