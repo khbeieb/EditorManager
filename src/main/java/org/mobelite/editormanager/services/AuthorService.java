@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import org.mobelite.editormanager.dto.AuthorDTO;
 import org.mobelite.editormanager.entities.Author;
 import org.mobelite.editormanager.entities.Book;
+import org.mobelite.editormanager.mappers.AuthorMapper;
 import org.mobelite.editormanager.repositories.AuthorRepository;
+import org.mobelite.editormanager.repositories.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,32 +15,26 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthorService {
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
     public AuthorDTO addAuthor(AuthorDTO request) {
-        if(authorRepository.findAuthorByName(request.getName()).isPresent()) {
+        if (authorRepository.findAuthorByName(request.getName()).isPresent()) {
             throw new RuntimeException("Author already exists");
         }
 
-        Author author = new Author();
-        author.setName(request.getName());
-        author.setBirthDate(request.getBirthDate());
-        author.setNationality(request.getNationality());
+        Author author = AuthorMapper.toEntity(request);
 
-        if (request.getBooks() != null) {
-            for (Book book : request.getBooks()) {
+        if (author.getBooks() != null) {
+            for (Book book : author.getBooks()) {
+                if (bookRepository.existsByIsbn(book.getIsbn())) {
+                    throw new RuntimeException("Book with ISBN " + book.getIsbn() + " already exists");
+                }
                 book.setAuthor(author);
             }
         }
-        author.setBooks(request.getBooks());
 
         Author savedAuthor = authorRepository.save(author);
-
-        return new AuthorDTO(
-                savedAuthor.getName(),
-                savedAuthor.getBirthDate(),
-                savedAuthor.getNationality(),
-                savedAuthor.getBooks()
-        );
+        return AuthorMapper.toDTO(savedAuthor);
     }
 
     public List<Author> getAllAuthors() {

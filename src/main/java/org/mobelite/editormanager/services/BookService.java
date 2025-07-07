@@ -5,6 +5,7 @@ import org.mobelite.editormanager.dto.AuthorBasicDTO;
 import org.mobelite.editormanager.dto.BookDTO;
 import org.mobelite.editormanager.entities.Author;
 import org.mobelite.editormanager.entities.Book;
+import org.mobelite.editormanager.mappers.BookMapper;
 import org.mobelite.editormanager.repositories.AuthorRepository;
 import org.mobelite.editormanager.repositories.BookRepository;
 import org.springframework.stereotype.Service;
@@ -27,52 +28,18 @@ public class BookService {
         Author author = authorRepository.findById(bookDTO.getAuthor().getId())
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + bookDTO.getAuthor().getId()));
 
-        Book book = new Book();
-        book.setIsbn(bookDTO.getIsbn());
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(author);
-        book.setPublicationDate(bookDTO.getPublicationDate());
+        Book savedBook = bookRepository.save(BookMapper.toEntity(bookDTO, author));
 
-        Book savedBook = bookRepository.save(book);
-
-        return new BookDTO(
-                savedBook.getTitle(),
-                savedBook.getIsbn(),
-                new AuthorBasicDTO(
-                        author.getId(),
-                        author.getName(),
-                        author.getNationality()
-                ),
-                savedBook.getPublicationDate()
-        );
+        return BookMapper.toDTO(savedBook);
     }
 
     public Optional<BookDTO> getByIsbn(String isbn) {
-        return bookRepository.findByIsbn(isbn)
-                .map(book -> new BookDTO(
-                        book.getTitle(),
-                        book.getIsbn(),
-                        new AuthorBasicDTO(
-                                book.getAuthor().getId(),
-                                book.getAuthor().getName(),
-                                book.getAuthor().getNationality()
-                        ),
-                        book.getPublicationDate()
-                ));
+        return bookRepository.findByIsbn(isbn).map(BookMapper::toDTO);
     }
 
     public List<BookDTO> getBooks() {
-        return bookRepository.findAll().stream().map(
-                book -> new BookDTO(
-                        book.getTitle(),
-                        book.getIsbn(),
-                        new AuthorBasicDTO(
-                                book.getAuthor().getId(),
-                                book.getAuthor().getName(),
-                                book.getAuthor().getNationality()
-                        ),
-                        book.getPublicationDate()
-                )
-        ).collect(Collectors.toList());
+        return bookRepository.findAll().stream()
+                .map(BookMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

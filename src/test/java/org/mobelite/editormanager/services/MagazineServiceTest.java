@@ -10,6 +10,7 @@ import org.mobelite.editormanager.dto.AuthorBasicDTO;
 import org.mobelite.editormanager.dto.MagazineDTO;
 import org.mobelite.editormanager.entities.Author;
 import org.mobelite.editormanager.entities.Magazine;
+import org.mobelite.editormanager.mappers.MagazineMapper;
 import org.mobelite.editormanager.repositories.AuthorRepository;
 import org.mobelite.editormanager.repositories.MagazineRepository;
 
@@ -47,10 +48,8 @@ public class MagazineServiceTest {
         when(magazineRepository.existsMagazineByIssueNumber(101)).thenReturn(false);
         when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
 
-        Magazine savedMagazine = new Magazine();
-        savedMagazine.setIssueNumber(101);
-        savedMagazine.setTitle("Monthly Tech");
-        savedMagazine.setAuthors(List.of(author));
+        Magazine magazineToSave = MagazineMapper.toEntity(request, List.of(author));
+        Magazine savedMagazine = magazineToSave;
 
         when(magazineRepository.save(any(Magazine.class))).thenReturn(savedMagazine);
 
@@ -72,7 +71,7 @@ public class MagazineServiceTest {
     @Test
     void addMagazine_shouldThrow_whenIssueNumberExists() {
         // Arrange
-        MagazineDTO request = new MagazineDTO(101, "Monthly Tech",LocalDate.of(2025, 7, 1), List.of());
+        MagazineDTO request = new MagazineDTO(101, "Monthly Tech", LocalDate.of(2025, 7, 1), List.of());
 
         when(magazineRepository.existsMagazineByIssueNumber(101)).thenReturn(true);
 
@@ -88,7 +87,7 @@ public class MagazineServiceTest {
     void addMagazine_shouldThrow_whenAuthorNotFound() {
         // Arrange
         AuthorBasicDTO authorDto = new AuthorBasicDTO(1L, null, null);
-        MagazineDTO request = new MagazineDTO(101, "Monthly Tech",LocalDate.of(2025, 7, 1), List.of(authorDto));
+        MagazineDTO request = new MagazineDTO(101, "Monthly Tech", LocalDate.of(2025, 7, 1), List.of(authorDto));
 
         when(magazineRepository.existsMagazineByIssueNumber(101)).thenReturn(false);
         when(authorRepository.findById(1L)).thenReturn(Optional.empty());
@@ -118,11 +117,13 @@ public class MagazineServiceTest {
         Magazine mag1 = new Magazine();
         mag1.setIssueNumber(101);
         mag1.setTitle("Monthly Tech");
+        mag1.setPublicationDate(LocalDate.of(2025, 7, 1));
         mag1.setAuthors(List.of(author1));
 
         Magazine mag2 = new Magazine();
         mag2.setIssueNumber(102);
         mag2.setTitle("Weekly News");
+        mag2.setPublicationDate(LocalDate.of(2025, 7, 5));
         mag2.setAuthors(List.of(author1, author2));
 
         when(magazineRepository.findAll()).thenReturn(List.of(mag1, mag2));

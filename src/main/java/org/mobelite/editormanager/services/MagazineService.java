@@ -6,6 +6,7 @@ import org.mobelite.editormanager.dto.MagazineDTO;
 import org.mobelite.editormanager.entities.Author;
 import org.mobelite.editormanager.entities.Magazine;
 import org.mobelite.editormanager.entities.Publication;
+import org.mobelite.editormanager.mappers.MagazineMapper;
 import org.mobelite.editormanager.repositories.AuthorRepository;
 import org.mobelite.editormanager.repositories.MagazineRepository;
 import org.springframework.stereotype.Service;
@@ -30,41 +31,16 @@ public class MagazineService {
                         .orElseThrow(() -> new RuntimeException("Author not found with ID: " + author.getId())))
                 .toList();
 
-        Magazine magazine = new Magazine();
-        magazine.setIssueNumber(request.getIssueNumber());
-        magazine.setTitle(request.getTitle());
-        magazine.setPublicationDate(request.getPublishedDate());
-        magazine.setAuthors(realAuthors);
+        Magazine magazine = MagazineMapper.toEntity(request, realAuthors);
 
         Magazine savedMagazine = magazineRepository.save(magazine);
 
-        return new MagazineDTO(
-                savedMagazine.getIssueNumber(),
-                savedMagazine.getTitle(),
-                savedMagazine.getPublicationDate(),
-                realAuthors.stream()
-                        .map(author -> new AuthorBasicDTO(
-                                author.getId(),
-                                author.getName(),
-                                author.getNationality()
-                        )).toList()
-        );
+        return MagazineMapper.toDTO(savedMagazine);
     }
 
     public List<MagazineDTO> getAllMagazines() {
-        return magazineRepository.findAll().stream().map(magazine ->
-                new MagazineDTO(
-                        magazine.getIssueNumber(),
-                        magazine.getTitle(),
-                        magazine.getPublicationDate(),
-                        magazine.getAuthors().stream().map(author ->
-                                new AuthorBasicDTO(
-                                        author.getId(),
-                                        author.getName(),
-                                        author.getNationality()
-                                )
-                        ).toList()
-                )
-        ).toList();
+        return magazineRepository.findAll().stream()
+                .map(MagazineMapper::toDTO)
+                .toList();
     }
 }

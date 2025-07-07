@@ -3,6 +3,7 @@ package org.mobelite.editormanager.services;
 import lombok.AllArgsConstructor;
 import org.mobelite.editormanager.dto.PublicationDTO;
 import org.mobelite.editormanager.entities.Publication;
+import org.mobelite.editormanager.enums.PublicationType;
 import org.mobelite.editormanager.repositories.BookRepository;
 import org.mobelite.editormanager.repositories.MagazineRepository;
 import org.mobelite.editormanager.repositories.PublicationRepository;
@@ -27,12 +28,12 @@ public class PublicationService {
     public List<PublicationDTO> searchByTitle(String title) {
         List<PublicationDTO> books = bookRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
-                .map(book -> new PublicationDTO("Book", book.getTitle(), book.getPublicationDate()))
+                .map(book -> new PublicationDTO(PublicationType.BOOK, book.getTitle(), book.getPublicationDate()))
                 .toList();
 
         List<PublicationDTO> magazines = magazineRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
-                .map(mag -> new PublicationDTO("Magazine", mag.getTitle(), mag.getPublicationDate()))
+                .map(mag -> new PublicationDTO(PublicationType.MAGAZINE, mag.getTitle(), mag.getPublicationDate()))
                 .toList();
 
         List<PublicationDTO> results = new ArrayList<>();

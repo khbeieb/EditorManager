@@ -4,16 +4,17 @@ import org.mobelite.editormanager.dto.PublicationDTO;
 import org.mobelite.editormanager.entities.Book;
 import org.mobelite.editormanager.entities.Magazine;
 import org.mobelite.editormanager.entities.Publication;
+import org.mobelite.editormanager.enums.PublicationType;
 
 public class PublicationMapper {
     public static PublicationDTO toDTO(Publication publication) {
-        String type;
+        PublicationType type;
         if (publication instanceof Book) {
-            type = "Book";
+            type = PublicationType.BOOK;
         } else if (publication instanceof Magazine) {
-            type = "Magazine";
+            type = PublicationType.MAGAZINE;
         } else {
-            type = "Unknown";
+            type = PublicationType.UNKNOWN;
         }
 
         return new PublicationDTO(
